@@ -1,0 +1,46 @@
+// 定义变量来存储鼠标点击的坐标
+let clickX, clickY;
+
+// 定义变量来存储定时器的引用
+let autoClickInterval;
+
+// 定义计数器
+let clickCount = 0;
+
+// 定义最大点击次数
+const maxClicks = 500;
+
+// 添加事件监听器，获取鼠标点击的坐标
+document.addEventListener('click', function(event) {
+    clickX = event.clientX;
+    clickY = event.clientY;
+    console.log(`点击坐标：X=${clickX}, Y=${clickY}`);
+    
+    // 清除之前的定时器（如果存在）
+    clearInterval(autoClickInterval);
+    clickCount = 0; // 重置点击计数器
+
+    // 设置定时器，每3秒自动点击
+    autoClickInterval = setInterval(function() {
+        // 创建一个鼠标点击事件
+        const clickEvent = new MouseEvent('click', {
+            clientX: clickX,
+            clientY: clickY,
+            bubbles: true,
+            cancelable: true
+        });
+        
+        // 触发点击事件
+        document.elementFromPoint(clickX, clickY).dispatchEvent(clickEvent);
+        console.log(`自动点击坐标：X=${clickX}, Y=${clickY}`);
+        
+        // 增加点击计数器
+        clickCount++;
+        
+        // 如果点击次数达到500次，停止定时器
+        if (clickCount >= maxClicks) {
+            clearInterval(autoClickInterval);
+            console.log('自动点击已达到500次，停止自动点击。');
+        }
+    }, 3000);
+});
